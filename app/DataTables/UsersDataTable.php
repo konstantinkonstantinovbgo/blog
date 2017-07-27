@@ -4,6 +4,7 @@ namespace App\DataTables;
 
 use App\User;
 use Yajra\Datatables\Services\DataTable;
+use Collective\Html\HtmlFacade;
 
 class UsersDataTable extends DataTable
 {
@@ -16,7 +17,19 @@ class UsersDataTable extends DataTable
     {
         return $this->datatables
             ->eloquent($this->query())
-            ->addColumn('action', 'usersdatatable.action');
+            // ->addColumn('action', 'usersdatatable.action')
+            ->editColumn('email', 'Email: {{$email}}') // Add Column with Blade Syntax
+            ->editColumn('name', function(User $user) { //Add Column with Closure
+                return 'Hi ' . $user->name . '!';
+            })
+            ->editColumn('remember_token', 'users.datatables.remember_token') // Add Column with View
+            ->editColumn('updated_at', function(User $user) {
+                return view('users.datatables.updated_at', compact('user'));
+            })
+            ->editColumn('action', function(User $user) {
+                return view('users.datatables.action', compact('user'));
+            })
+            ->rawColumns(['remember_token', 'updated_at','action']);
     }
 
     /**
@@ -41,7 +54,7 @@ class UsersDataTable extends DataTable
         return $this->builder()
                     ->columns($this->getColumns())
                     ->minifiedAjax('')
-                    ->addAction(['width' => '80px'])
+                    ->addAction(['width' => '120px'])
                     ->parameters([
                         'dom'     => 'Bfrtip',
                         'order'   => [[0, 'desc']],
@@ -52,8 +65,6 @@ class UsersDataTable extends DataTable
                             'reset',
                             'reload',
                         ],
-//                        "processing"=> true,
-//                        "serverSide"=> true,
                     ]);
     }
 
@@ -68,6 +79,7 @@ class UsersDataTable extends DataTable
             'id',
             'name',
             'email',
+            'remember_token',
             'created_at',
             'updated_at'
         ];
