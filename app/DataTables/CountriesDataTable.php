@@ -4,7 +4,7 @@ namespace App\DataTables;
 
 use App\Country;
 use Yajra\Datatables\Services\DataTable;
-
+use DB;
 
 class CountriesDataTable extends DataTable
 {
@@ -17,6 +17,15 @@ class CountriesDataTable extends DataTable
     {
         return $this->datatables
             ->eloquent($this->query())
+            /*
+            ->editColumn('iso', function (Country $country) {
+                return $country->cc_iso.'-'.$country->cc_fips;
+            })
+            */
+            ->filterColumn('iso', function($query, $keyword) {
+                $sql = "CONCAT(countries.cc_fips,' ',countries.cc_iso)  like ?";
+                $query->whereRaw($sql, ["%{$keyword}%"]);
+            })
             ->addColumn('action', 'countriesdatatable.action');
     }
 
@@ -27,7 +36,13 @@ class CountriesDataTable extends DataTable
      */
     public function query()
     {
-        $query = Country::query()->select($this->getColumns());
+        $select = [
+            'country_name',
+            'tld',
+            DB::raw("CONCAT(countries.cc_fips,'-',countries.cc_iso) as iso")
+        ];
+
+        $query = Country::query()->select($select);
 
         return $this->applyScopes($query);
     }
@@ -64,10 +79,15 @@ class CountriesDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'cc_fips',
-            'cc_iso',
-            'tld',
-            'country_name',
+            'country_name' => [
+                'title' => 'Country'
+            ],
+            'tld' => [
+                'title' => 'TLD'
+            ],
+            'iso' => [
+                'title' => 'ISO'
+            ]
         ];
     }
 
