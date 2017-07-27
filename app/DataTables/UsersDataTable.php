@@ -2,8 +2,10 @@
 
 namespace App\DataTables;
 
+use Exception;
 use App\User;
 use Yajra\Datatables\Services\DataTable;
+
 
 class UsersDataTable extends DataTable
 {
@@ -14,17 +16,50 @@ class UsersDataTable extends DataTable
      */
     public function dataTable()
     {
-        return $this->datatables
-            ->eloquent($this->query())
-            ->editColumn('E:', 'Email: {{$email}}') // Add Column with Blade Syntax
-            ->editColumn('name', function(User $user) { //Add Column with Closure
-                return 'Hi ' . $user->name . '!';
-            })
-            ->editColumn('remember_token', 'users.datatables.partials.remember_token') // Add Column with View
-            ->editColumn('action', function(User $user) {
-                return view('users.datatables.partials.action', compact('user'));
-            })
-            ->rawColumns(['remember_token', 'updated_at','action']);
+        try {
+            return $this->datatables
+                ->eloquent($this->query())
+                ->editColumn('email','E: {{$email}}')// Add Column with Blade Syntax
+                ->editColumn('name', function (User $user) { //Add Column with Closure
+                    return 'Hi ' . $user->name . '!';
+                })
+                ->editColumn('remember_token', 'users.datatables.partials.remember_token')// Add Column with View
+                ->editColumn('action', function (User $user) {
+                    return view('users.datatables.partials.action', compact('user'));
+                })
+                /*
+                ->addIndexColumn()
+                ->setRowId('id')
+                ->setRowId(function ($user) {
+                    return $user->id;
+                })
+                ->setRowClass(function ($user) {
+                    return $user->id % 2 == 0 ? 'alert-success' : 'alert-warning';
+                })
+                ->setRowClass('{{ $id % 2 == 0 ? "alert-success" : "alert-warning" }}')
+                ->setRowData([
+                    'data-id' => function($user) {
+                        return 'row-' . $user->id;
+                    },
+                    'data-name' => function($user) {
+                        return 'row-' . $user->name;
+                    },
+                ])
+                ->setRowData([
+                    'data-id' => 'row-{{$id}}',
+                    'data-name' => 'row-{{$name}}',
+                ])
+                ->setRowAttr([
+                    'color' => function($user) {
+                        return $user->color;
+                    },
+                ])
+                */
+                ->rawColumns(['remember_token', 'updated_at', 'action']);
+
+        } catch (Exception $e) {
+            echo 'Message: ' .$e->getMessage();
+        }
     }
 
     /**

@@ -232,6 +232,11 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        /**
+         * Datatables
+         */
+        'Datatables' => Yajra\Datatables\Facades\Datatables::class,
+
     ],
 
 ];
