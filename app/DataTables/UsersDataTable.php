@@ -22,12 +22,9 @@ class UsersDataTable extends DataTable
             ->editColumn('name', function(User $user) { //Add Column with Closure
                 return 'Hi ' . $user->name . '!';
             })
-            ->editColumn('remember_token', 'users.datatables.remember_token') // Add Column with View
-            ->editColumn('updated_at', function(User $user) {
-                return view('users.datatables.updated_at', compact('user'));
-            })
+            ->editColumn('remember_token', 'users.datatables.partials.remember_token') // Add Column with View
             ->editColumn('action', function(User $user) {
-                return view('users.datatables.action', compact('user'));
+                return view('users.datatables.partials.action', compact('user'));
             })
             ->rawColumns(['remember_token', 'updated_at','action']);
     }
