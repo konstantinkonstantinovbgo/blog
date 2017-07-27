@@ -1,1 +1,0 @@
-{{ $user->updated_at }}
