@@ -4,7 +4,6 @@ namespace App\DataTables;
 
 use App\User;
 use Yajra\Datatables\Services\DataTable;
-use Collective\Html\HtmlFacade;
 
 class UsersDataTable extends DataTable
 {
@@ -80,7 +79,7 @@ class UsersDataTable extends DataTable
 //                         'cache' => false,
 //                         'responsive' => true,
 //                          'serverSide' => true,
-                         'stateSave' => true,
+//                         'stateSave' => true, // State Saving using html5 localStorage
                     ]);
     }
 
