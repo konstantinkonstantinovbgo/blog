@@ -6,6 +6,7 @@ use App\Country;
 use Yajra\Datatables\Services\DataTable;
 use DB;
 
+
 class CountriesDataTable extends DataTable
 {
     /**
