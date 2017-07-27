@@ -17,8 +17,7 @@ class UsersDataTable extends DataTable
     {
         return $this->datatables
             ->eloquent($this->query())
-            // ->addColumn('action', 'usersdatatable.action')
-            ->editColumn('email', 'Email: {{$email}}') // Add Column with Blade Syntax
+            ->editColumn('E:', 'Email: {{$email}}') // Add Column with Blade Syntax
             ->editColumn('name', function(User $user) { //Add Column with Closure
                 return 'Hi ' . $user->name . '!';
             })
@@ -51,6 +50,21 @@ class UsersDataTable extends DataTable
         return $this->builder()
                     ->columns($this->getColumns())
                     ->minifiedAjax('')
+                    ->addColumn([
+                            'data' => 'remember_token',
+                            'name' => 'remember_token',
+                            'title' => 'Icon',
+                            'orderable' => false,
+                            'searchable' => false,
+                        ]
+                    )
+            /*
+                    ->addColumn(['data' => 'id','name' => 'id', 'title' => 'ID'])
+                    ->addColumn(['data' => 'name','name' => 'name', 'title' => 'Name'])
+                    ->addColumn(['data' => 'email','name' => 'email', 'title' => 'Email'])
+                    ->addColumn(['data' => 'created_at','name' => 'created_at', 'title' => 'Created At'])
+                    ->addColumn(['data' => 'updated_at','name' => 'updated_at', 'title' => 'Updated at'])
+            */
                     ->addAction(['width' => '120px'])
                     ->parameters([
                         'dom'     => 'Bfrtip',
@@ -62,6 +76,11 @@ class UsersDataTable extends DataTable
                             'reset',
                             'reload',
                         ],
+//                         'paging' => true,
+//                         'cache' => false,
+//                         'responsive' => true,
+//                          'serverSide' => true,
+                         'stateSave' => true,
                     ]);
     }
 
@@ -76,9 +95,8 @@ class UsersDataTable extends DataTable
             'id',
             'name',
             'email',
-            'remember_token',
             'created_at',
-            'updated_at'
+            'updated_at',
         ];
     }
 
