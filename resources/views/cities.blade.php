@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-    {!! $dataTable->table(['class' => 'table table-bordered', 'id' => 'countries-id'], true) !!}
+    {!! $dataTable->table(['class' => 'table table-bordered', 'id' => 'cities-id']) !!}
 @endsection
 
 @push('scripts')
@@ -9,4 +9,4 @@
     <script src="https://cdn.datatables.net/buttons/1.0.3/js/dataTables.buttons.min.js"></script>
     <script src="/vendor/datatables/buttons.server-side.js"></script>
     {!! $dataTable->scripts() !!}
-@endpushs
+@endpush
