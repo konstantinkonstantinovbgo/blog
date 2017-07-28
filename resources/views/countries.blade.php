@@ -1,7 +1,8 @@
 @extends('layouts.master')
 
 @section('content')
-    {!! $dataTable->table(['class' => 'table table-bordered', 'id' => 'countries-id'], true) !!}
+    {{--{!! $dataTable->table(['class' => 'table table-bordered', 'id' => 'countries-id'], true) !!}--}}
+    {!! $dataTable->table(['class' => 'table table-bordered', 'id' => 'countries-id']) !!}
 @endsection
 
 @push('scripts')

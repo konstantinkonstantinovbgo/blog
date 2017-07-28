@@ -18,11 +18,6 @@ class CountriesDataTable extends DataTable
     {
         return $this->datatables
             ->eloquent($this->query())
-            /*
-            ->editColumn('iso', function (Country $country) {
-                return $country->cc_iso.'-'.$country->cc_fips;
-            })
-            */
             ->filterColumn('iso', function($query, $keyword) {
                 $sql = "CONCAT(countries.cc_fips,' ',countries.cc_iso)  like ?";
                 $query->whereRaw($sql, ["%{$keyword}%"]);
@@ -40,10 +35,14 @@ class CountriesDataTable extends DataTable
         $select = [
             'country_name',
             'tld',
-            DB::raw("CONCAT(countries.cc_fips,'-',countries.cc_iso) as iso")
+            DB::raw("CONCAT(countries.cc_fips,'-',countries.cc_iso) as iso"),
+            DB::raw('count(world_cities_free.cc_fips) as count')
         ];
 
-        $query = Country::query()->select($select);
+        $query = Country::query()
+            ->select($select)
+            ->leftJoin('world_cities_free','world_cities_free.cc_fips','=','countries.cc_fips')
+            ->groupBy('countries.cc_fips');
 
         return $this->applyScopes($query);
     }
@@ -58,6 +57,7 @@ class CountriesDataTable extends DataTable
         return $this->builder()
                     ->columns($this->getColumns())
                     // ->minifiedAjax('')
+                    ->addColumn(['data' => 'count','name' => 'count', 'title' => '# of Cities', 'searchable' => false])
                     ->addAction(['width' => '80px', 'orderable' => false, 'searchable' => false])
                     ->parameters([
                         'dom'     => 'Bfrtip',
@@ -99,7 +99,12 @@ class CountriesDataTable extends DataTable
             ],
             'iso' => [
                 'title' => 'ISO'
+            ],
+            /*
+            'count' => [
+                'title' => '# of Cities'
             ]
+            */
         ];
     }
 
