@@ -57,8 +57,8 @@ class CountriesDataTable extends DataTable
     {
         return $this->builder()
                     ->columns($this->getColumns())
-                    ->minifiedAjax('')
-                    ->addAction(['width' => '80px'])
+                    // ->minifiedAjax('')
+                    ->addAction(['width' => '80px', 'orderable' => false, 'searchable' => false])
                     ->parameters([
                         'dom'     => 'Bfrtip',
                         'order'   => [[0, 'desc']],
@@ -69,6 +69,17 @@ class CountriesDataTable extends DataTable
                             'reset',
                             'reload',
                         ],
+                        /* footer column search */
+                        'initComplete' => "function () {
+                            this.api().columns().every(function () {
+                                var column = this;
+                                var input = document.createElement(\"input\");
+                                $(input).appendTo($(column.footer()).empty())
+                                .on('change', function () {
+                                    column.search($(this).val(), false, false, true).draw();
+                                });
+                            });
+                        }",
                     ]);
     }
 
