@@ -18,3 +18,5 @@ Route::get('/', function () {
 
 Route::resource('users', 'UsersController');
 Route::resource('countries', 'CountriesController');
+Route::resource('master', 'MasterAndDetailController');
+Route::get('master/details-data/{id}', 'MasterAndDetailController@details')->name('master-details-data');
