@@ -2,7 +2,7 @@
 
 
 @section('content')
-    {!! $dataTable->table(['class' => 'table table-condensed', 'id' => 'cities-table']) !!}
+    {!! $dataTable->table() !!}
 @endsection
 
 @include('cities.datatables.partials.search_filter')
@@ -15,17 +15,15 @@
     {!! $dataTable->scripts() !!}
 
     <script>
-        $('#cities-table').on('preXhr.dt', function ( e, settings, data ) {
-            data.full_name_nd= $('input[name=full_name_nd]').val();
-            data.cc_fips= $('input[name=cc_fips]').val();
+        $('#dataTableBuilder').on('preXhr.dt', function ( e, settings, data ) {
+            data.full_name_nd= $('input[name=search_name]').val();
             console.log(data);
         });
-        /*
+
         $('#search-form').on('submit', function(e) {
-             oTable.draw();
+             // oTable.draw();
+             window.LaravelDataTables["dataTableBuilder"].draw();
              e.preventDefault();
-            alert(123);
         });
-        */
     </script>
 @endpush
