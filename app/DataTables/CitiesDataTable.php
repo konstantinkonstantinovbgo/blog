@@ -5,6 +5,7 @@ namespace App\DataTables;
 use App\City;
 use Yajra\Datatables\Services\DataTable;
 
+
 class CitiesDataTable extends DataTable
 {
     /**
@@ -14,9 +15,20 @@ class CitiesDataTable extends DataTable
      */
     public function dataTable()
     {
+        $request = $this->datatables->getRequest();
+
         return $this->datatables
             ->eloquent($this->query())
-            ->addColumn('action', 'citiesdatatable.action');
+            ->addColumn('action', 'citiesdatatable.action')
+            ->filter(function ($query) use ($request) {
+                if ($request->has('cc_fips')) {
+                    $query->where('cc_fips', 'like', "%{$request->get('cc_fips')}%");
+                }
+
+                if ($request->has('full_name_nd')) {
+                    $query->where('full_name_nd', 'like', "%{$request->get('full_name_nd')}%");
+                }
+            });
     }
 
     /**
@@ -26,9 +38,25 @@ class CitiesDataTable extends DataTable
      */
     public function query()
     {
-        $query = City::query()->select($this->getColumns());
+        $query = City::query()->select();
 
         return $this->applyScopes($query);
+    }
+
+    public function getBuilderParameters() {
+            return [
+                'dom'     => 'Bfrtip',
+                'order'   => [
+                    [0, 'desc']
+                ],
+                'buttons' => [
+                'create',
+                'export',
+                'print',
+                'reset',
+                'reload',
+            ]
+        ];
     }
 
     /**
@@ -38,21 +66,12 @@ class CitiesDataTable extends DataTable
      */
     public function html()
     {
-        return $this->builder()
+        $html = $this->builder()
                     ->columns($this->getColumns())
-                    ->minifiedAjax('')
                     ->addAction(['width' => '80px'])
-                    ->parameters([
-                        'dom'     => 'Bfrtip',
-                        'order'   => [[0, 'desc']],
-                        'buttons' => [
-                            'create',
-                            'export',
-                            'print',
-                            'reset',
-                            'reload',
-                        ],
-                    ]);
+                    ->parameters($this->getBuilderParameters());
+
+        return $html;
     }
 
     /**
@@ -63,8 +82,12 @@ class CitiesDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'cc_fips',
-            'full_name_nd',
+            'cc_fips' => [
+                'title' => 'Abbr',
+            ],
+            'full_name_nd' => [
+                'title' => 'Name'
+            ],
         ];
     }
 

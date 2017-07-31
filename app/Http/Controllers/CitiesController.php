@@ -10,6 +10,6 @@ class CitiesController extends Controller
 {
     public function index(CitiesDataTable $dataTable)
     {
-        return $dataTable->render('cities/cities');
+        return $dataTable->render('cities.datatables.cities');
     }
 }
