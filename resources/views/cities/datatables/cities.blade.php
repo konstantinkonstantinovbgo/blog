@@ -21,7 +21,6 @@
         });
 
         $('#search-form').on('submit', function(e) {
-             // oTable.draw();
              window.LaravelDataTables["dataTableBuilder"].draw();
              e.preventDefault();
         });

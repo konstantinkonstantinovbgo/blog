@@ -21,9 +21,6 @@ class CitiesDataTable extends DataTable
             ->eloquent($this->query())
             ->addColumn('action', 'citiesdatatable.action')
             ->filter(function ($query) use ($request) {
-                if ($request->has('search_fips')) {
-                    $query->where('cc_fips', 'like', "%{$request->get('search_fips')}%");
-                }
 
                 if ($request->has('search_name')) {
                     $query->where('full_name_nd', 'like', "%{$request->get('search_name')}%");
