@@ -22,8 +22,8 @@ class CitiesDataTable extends DataTable
             ->addColumn('action', 'citiesdatatable.action')
             ->filter(function ($query) use ($request) {
 
-                if ($request->has('search_name')) {
-                    $query->where('full_name_nd', 'like', "%{$request->get('search_name')}%");
+                if ($request->has('full_name_nd')) {
+                    $query->where('full_name_nd', 'like', "%{$request->get('full_name_nd')}%");
                 }
             });
     }
